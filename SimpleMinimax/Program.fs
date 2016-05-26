@@ -31,7 +31,7 @@ let territoriesHaveOpposingArmies(terr1: territory, terr2: territory) =
 
 let attacksFromHere(terr: territory) =
     terr.Connections
-    |> Seq.iter(fun x -> if territoriesHaveOpposingArmies(terr, board.Item(x)) && terr.Armies > board.Item(x).Armies then  attackPair(terr, board.Item(x)) |> ignore)//type mismatch
+    |> List.collect(fun x -> if territoriesHaveOpposingArmies(terr, board.Item(x)) && terr.Armies > board.Item(x).Armies then [attackPair(terr, board.Item(x))] else [])
 
 let validAttacks = 
     board 
@@ -53,5 +53,5 @@ let validAttacks =
 [<EntryPoint>]
 let main argv = 
     validAttacks
-    |> Seq.iter(fun x -> printfn "%A" x)
+    |> Seq.iter(fun x -> x |> Seq.iter( fun y -> printfn "%A" y.FromTerritory.ID))
     0 // return an integer exit code
