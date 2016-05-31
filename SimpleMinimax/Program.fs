@@ -29,10 +29,10 @@ let territoriesHaveOpposingArmies(terr1: territory, terr2: territory) =
         terr1.Connections
         |> Seq.contains terr2.ID
 
-let attacksFromHere(terr: territory) =
-    terr.Connections
-    |> Seq.iter(fun x -> if territoriesHaveOpposingArmies(terr, board.Item(x)) && terr.Armies > board.Item(x).Armies then  attackPair(terr, board.Item(x)) |> ignore)//type mismatch
-
+let attacksFromHere(fromTerr: territory) =
+    fromTerr.Connections
+    |> List.map(fun toIndex -> if territoriesHaveOpposingArmies(fromTerr, board.Item(toIndex)) && fromTerr.Armies > board.Item(toIndex).Armies then attackPair(fromTerr, board.Item(toIndex)) |> ignore)//type mismatch
+    
 let validAttacks = 
     board 
     |> Seq.filter(fun terr -> terr.Player = currentPlayer)
