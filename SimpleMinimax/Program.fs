@@ -1,5 +1,4 @@
-﻿
-type territory = 
+﻿type territory = 
     struct
         val ID: int
         val Connections: List<int>
@@ -22,17 +21,15 @@ let board = [
 let currentPlayer = 0
 //initalization done
 
-let territoriesHaveOpposingArmies(terr1: territory, terr2: territory) =
-    if terr1.Player = terr2.Player then
-        false
-    else
-        terr1.Connections
-        |> Seq.contains terr2.ID
+let createAttackPair(terr: territory, x: int) =
+    if terr.Player <> board.Item(x).Player && terr.Armies > board.Item(x).Armies 
+    then [attackPair(terr, board.Item(x))] 
+    else []
 
-let attacksFromHere(fromTerr: territory) =
-    fromTerr.Connections
-    |> List.map(fun toIndex -> if territoriesHaveOpposingArmies(fromTerr, board.Item(toIndex)) && fromTerr.Armies > board.Item(toIndex).Armies then attackPair(fromTerr, board.Item(toIndex)) |> ignore)//type mismatch
-    
+let attacksFromHere(terr: territory) =
+    terr.Connections
+    |> List.collect(fun x -> createAttackPair(terr, x))
+
 let validAttacks = 
     board 
     |> Seq.filter(fun terr -> terr.Player = currentPlayer)
@@ -53,5 +50,5 @@ let validAttacks =
 [<EntryPoint>]
 let main argv = 
     validAttacks
-    |> Seq.iter(fun x -> printfn "%A" x)
+    |> Seq.iter(fun x -> x |> Seq.iter( fun y -> printfn "%A" y.FromTerritory.ID))
     0 // return an integer exit code
