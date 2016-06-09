@@ -23,19 +23,21 @@ let currentPlayer = 0
 
 let createAttackPair(terr: territory, x: int) =
     if terr.Player <> board.Item(x).Player && terr.Armies > board.Item(x).Armies 
-    then [attackPair(terr, board.Item(x))] 
+    then [attackPair(terr, board.Item(x))]
     else []
 
 let attacksFromHere(terr: territory) =
     terr.Connections
-    |> List.collect(fun x -> createAttackPair(terr, x))
+    |> Seq.collect(fun x -> createAttackPair(terr, x))
 
 let validAttacks = 
     board 
     |> Seq.filter(fun terr -> terr.Player = currentPlayer)
     |> Seq.map(attacksFromHere)
 
+//win conditions - one player controls all, no valid moves
 
+//node has value, boolean for min or max (player), game state
 
 
 
